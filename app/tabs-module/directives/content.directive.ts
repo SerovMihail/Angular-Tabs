@@ -1,5 +1,6 @@
-import { Directive } from '@angular/core';
+import { Directive, ViewContainerRef } from "@angular/core";
 
-@Directive({selector: '[tabContent]'})
+@Directive({ selector: "[tabContent]" })
 export class TabContent {
+  constructor(public viewContainer: ViewContainerRef) {}
 }

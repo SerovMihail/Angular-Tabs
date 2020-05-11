@@ -11,10 +11,9 @@ import { TabContentComponent } from "../tab-parts/tab-content/tab-content.compon
 @Component({
   selector: "tab",
   templateUrl: "./tab.component.html",
-  styleUrls: ["./tab.component.css"],
+  styleUrls: ["./tab.component.css"]
 })
 export class TabComponent implements OnInit {
-
   @ContentChild(TabTitleComponent, { static: true })
   tabTitle: TabTitleComponent;
 
@@ -44,5 +43,9 @@ export class TabComponent implements OnInit {
     this.tabIndex = index;
     this.tabTitle.setTabIndex(index);
     this.tabContent.setTabIndex(index);
+  }
+
+  observeActiveTabIndexChange() {
+    this.tabContent.observeActiveTabIndexChange();
   }
 }

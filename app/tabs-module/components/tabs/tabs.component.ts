@@ -20,18 +20,14 @@ import { TabsService } from "../../services/tabs.service";
   host: { class: "tabs__titles" },
   providers: [TabsService]
 })
-export class TabsComponent implements OnInit, AfterContentInit {
-  
+export class TabsComponent implements AfterContentInit {
   @ContentChildren(TabComponent) tabsComponents: QueryList<TabComponent>;
-
 
   constructor(
     private readonly element: ElementRef,
     private readonly renderer: Renderer2,
     private readonly tabsService: TabsService
   ) {}
-
-  ngOnInit() {}
 
   ngAfterContentInit() {
     this.initTabs();
@@ -43,9 +39,6 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
   private subscribeActiveTabIndexChange() {
     this.tabsService.activeTabIndex$.subscribe(activeTabIndex => {
-
-      debugger;
-
       this.deactivateAllTabs();
 
       const activeTab = this.tabsComponents.find(
@@ -55,10 +48,8 @@ export class TabsComponent implements OnInit, AfterContentInit {
     });
   }
 
-
   private subscribeTabsLengthChanges() {
     this.tabsComponents.changes.subscribe(changes => {
-
       const tabsComponentsArray = changes.toArray();
       if (!tabsComponentsArray.length) {
         return;
@@ -66,6 +57,10 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
       const activeTabIndex = -1;
       tabsComponentsArray.forEach((tab, index) => {
+        if (tab.tabIndex === undefined || tab.tabIndex === null) {
+          tab.observeActiveTabIndexChange();
+        }
+
         tab.setTabIndex(index);
 
         if (tab.isActive) {
@@ -74,7 +69,7 @@ export class TabsComponent implements OnInit, AfterContentInit {
       });
 
       if (activeTabIndex === -1) {
-        this.tabsComponents.first.activateTab();
+        this.tabsService.activeTabIndex$.next(0);
       }
     });
   }
@@ -88,6 +83,7 @@ export class TabsComponent implements OnInit, AfterContentInit {
     this.tabsComponents.forEach((tab, index) => {
       tab.deactivateTab();
       tab.setTabIndex(index);
+      tab.observeActiveTabIndexChange();
     });
 
     firstTabComponent.activateTab();

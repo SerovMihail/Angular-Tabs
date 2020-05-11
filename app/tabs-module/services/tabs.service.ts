@@ -5,8 +5,6 @@ import { BehaviorSubject } from "rxjs";
 export class TabsService {
   activeTabIndex$ = new BehaviorSubject<number>(0);
 
-  constructor() {}
-
   activateTabIndex(index: number) {
     this.activeTabIndex$.next(index);
   }
